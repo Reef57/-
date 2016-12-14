@@ -19,7 +19,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Main"/>
-        <TopLine Value="108"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="99"/>
         <CursorPos X="35" Y="139"/>
         <UsageCount Value="94"/>
         <Loaded Value="True"/>
@@ -28,7 +29,6 @@
       <Unit2>
         <Filename Value="figures.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <TopLine Value="9"/>
         <CursorPos X="48" Y="9"/>
