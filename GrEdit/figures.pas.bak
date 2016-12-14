@@ -5,20 +5,19 @@ unit figures;
 interface
 
 uses
-  Classes, SysUtils, Graphics;
+  Classes, SysUtils, Graphics, fpcanvas;
 
 type
   TFigure = class
   protected
     FPoints: array of TPoint;
-   // tl, br: TPoint;   //tl is a top left point, br is a bottom right point
   public
     FColor, FBrush: TColor;
     FBrushStyle: TFPBrushStyle;
     FWidth: integer;
     procedure Draw(MyCanvas: TCanvas); virtual;
-    procedure AddPoint(CurPoint: TPoint);
-    constructor Create(CurPoint: TPoint);
+    procedure AddPoint(CurPoint: TPoint); virtual;
+    constructor Create(CurPoint: TPoint); virtual;
   end;
 
   TRectangle = class(TFigure)
@@ -44,10 +43,17 @@ type
   end;
 
   TPolyline = class(TFigure)
+  public
+    procedure Draw(MyCanvas: TCanvas); override;
+    procedure AddPoint(CurPoint: TPoint); override;
+    constructor PolylineCreate(CurPoint: TPoint; SidesNum: integer);
+  end;
+
+  TModifiedPolygon = class(TFigure)
     public
-      PSidesNum: integer;
       procedure Draw(MyCanvas: TCanvas); override;
-      constructor PolylineCreate(CurPoint: TPoint; SidesNum: integer);
+      procedure AddPoint(CurPoint: TPoint); override;
+      constructor Create(CurPoint: TPoint); override;
   end;
 
 var
@@ -73,8 +79,14 @@ end;
 //Add top left point to array(TPolyline)
 constructor TPolyline.PolylineCreate(CurPoint: TPoint; SidesNum: integer);
 begin
-  setlength(FPoints, 2);
-  PSidesNum := SidesNum;
+  setlength(FPoints, length(FPoints) + 1);
+  FPoints[0] := CurPoint;
+end;
+
+//Add top left point to array(TModifiedPolygon)
+constructor TModifiedPolygon.Create(CurPoint: TPoint);
+begin
+  setlength(FPoints, length(FPoints) + 1);
   FPoints[0] := CurPoint;
 end;
 
@@ -82,6 +94,20 @@ end;
 procedure TFigure.AddPoint(CurPoint: TPoint);
 begin
   FPoints[1] := CurPoint;
+end;
+
+//Add point to Polyline
+procedure TPolyline.AddPoint(CurPoint: TPoint);
+begin
+  setlength(FPoints, length(FPoints) + 1);
+  FPoints[high(FPoints)] := CurPoint;
+end;
+
+//Add point to ModifiedPolygon
+procedure TModifiedPolygon.AddPoint(CurPoint: TPoint);
+begin
+  setlength(FPoints, length(FPoints) + 1);
+  FPoints[high(FPoints)] := CurPoint;
 end;
 
 //Draw function for Rectangles
@@ -140,14 +166,31 @@ end;
 
 //Draw function for Polyline
 procedure TPolyline.Draw(MyCanvas: TCanvas);
+var
+  i: integer;
 begin
   MyCanvas.Pen.Width := FWidth;
   MyCanvas.Pen.Color := FColor;
   MyCanvas.Brush.Color := FBrush;
   MyCanvas.Brush.Style := FBrushStyle;
-  MyCanvas.Polyline(FPoints);
+  MyCanvas.MoveTo(FPoints[0]);
+  for i := 0 to length(FPoints) - 1 do begin
+    MyCanvas.LineTo(FPoints[i]);
+  end;
 end;
 
+//Draw function for ModifiedPolygon
+procedure TModifiedPolygon.Draw(MyCanvas: TCanvas);
+var
+  i: integer;
+begin
+  MyCanvas.Pen.Width := FWidth;
+  MyCanvas.Pen.Color := FColor;
+  MyCanvas.Brush.Color := FBrush;
+  MyCanvas.Brush.Style := FBrushStyle;
+  MyCanvas.MoveTo(FPoints[0]);
+  MyCanvas.Polygon(FPoints);
+end;
 //Empty draw function for main class
 procedure TFigure.Draw(MyCanvas: TCanvas);
 begin

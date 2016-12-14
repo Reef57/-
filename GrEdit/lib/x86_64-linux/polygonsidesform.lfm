@@ -1,0 +1,35 @@
+object Sides: TSides
+  Left = 169
+  Height = 76
+  Top = 353
+  Width = 301
+  Caption = 'Sides'
+  ClientHeight = 76
+  ClientWidth = 301
+  LCLVersion = '1.6.0.4'
+  object UserHelp: TLabel
+    Left = 11
+    Height = 17
+    Top = 10
+    Width = 279
+    Caption = 'Enter a number of sides for your polygon'
+    ParentColor = False
+  end
+  object SidesInput: TEdit
+    Left = 11
+    Height = 27
+    Top = 39
+    Width = 93
+    OnEditingDone = CheckInput
+    TabOrder = 0
+  end
+  object ConfirmButton: TButton
+    Left = 234
+    Height = 27
+    Top = 39
+    Width = 56
+    Caption = 'Ok'
+    OnClick = ConfirmClick
+    TabOrder = 1
+  end
+end

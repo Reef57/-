@@ -18,6 +18,7 @@ type
     PolygonButton: TBitBtn;
     LineButton: TBitBtn;
     PolylineButton: TBitBtn;
+    MPolygonButton: TBitBtn;
     RectangleButton: TBitBtn;
     FillCheckBox: TCheckBox;
     FillColorButton: TColorButton;
@@ -76,6 +77,7 @@ begin
   2: FiguresArray[high(FiguresArray)] := TLine.Create(CurPoint);
   3: FiguresArray[high(FiguresArray)] := TPolygon.PolygonCreate(CurPoint, SidesNum);
   4: FiguresArray[high(FiguresArray)] := TPolyline.PolylineCreate(CurPoint, SidesNum);
+  5: FiguresArray[high(FiguresArray)] := TModifiedPolygon.Create(CurPoint);
   end;
   FiguresArray[high(FiguresArray)].FWidth := TWidth;
   FiguresArray[high(FiguresArray)].FBrush := MyBrushColor;
@@ -108,8 +110,9 @@ procedure TGEditor.PaintBoxPaint(Sender: TObject);
 var
   figr: TFigure;
 begin
-  for figr in FiguresArray do
+  for figr in FiguresArray do begin
     figr.Draw(PaintBox.Canvas);
+  end;
 end;
 
 procedure TGEditor.PolygonSidesChange(Sender: TObject);
@@ -130,6 +133,10 @@ begin
   else
   begin
     ShowMessage('Polygon sides number must be >=3');
+  end;
+  if EditNum >= 250 then
+  begin
+    ShowMessage('Max- 250 sides');
   end;
 end;
 
