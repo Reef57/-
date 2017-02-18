@@ -1,0 +1,253 @@
+unit ToolUnit;
+
+{$mode objfpc}{$H+}
+
+interface
+
+uses
+  Classes, SysUtils, FiguresUnit, Graphics, Controls, Dialogs, Buttons,
+  GraphMath, Math, Grids, LCLIntf, LCLType, ScaleUnit, Windows,
+  FPCanvas, TypInfo, LCL, Forms, Menus, StdCtrls;
+
+type
+  TTool = class
+  strict protected
+    FFigManager: TFigManager;
+    CellColor : TCellColor;
+    FFigure: TFigure;
+    AWidth: integer;
+    DrawFlag: boolean;
+  public
+    property FigManager: TFigManager read FFigManager write FFigManager;
+    procedure MouseMove(Shift: TShiftState; Point: TPoint); virtual; abstract;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; Point: TPoint);
+      virtual; abstract;
+    procedure MouseUp(Shift: TShiftState; Point: TPoint; RButton: boolean); virtual;
+    procedure SetColor(Colors: TCellColor);
+    procedure SetWidth(CurWidth: integer);
+  end;
+
+  TPolyLineTool = class(TTool)
+  public
+    procedure MouseMove(Shift: TShiftState; Point: TPoint); override;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
+      Point: TPoint); override;
+  end;
+
+  TRectTool = class(TTool)
+  public
+    procedure MouseMove(Shift: TShiftState; Point: TPoint); override;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
+      Point: TPoint); override;
+  end;
+
+  TEllipseTool = class(TTool)
+  public
+    procedure MouseMove(Shift: TShiftState; Point: TPoint); override;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
+      Point: TPoint); override;
+  end;
+
+  TLineTool = class(TTool)
+  private
+    isDrawing: boolean;
+  public
+    procedure MouseMove(Shift: TShiftState; Point: TPoint); override;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
+    Point: TPoint); override;
+    procedure MouseUp(Shift: TShiftState; Point: TPoint; RButton: boolean); override;
+  end;
+
+  TPolyGonTool = class(TTool)
+  public
+    procedure MouseMove(Shift: TShiftState; Point: TPoint); override;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
+      Point: TPoint); override;
+  end;
+
+  TZoomTool = class(TTool)
+  public
+    procedure MouseMove(Shift: TShiftState; Point: TPoint); override;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
+      Point: TPoint); override;
+    procedure MouseUp(Shift: TShiftState; Point: TPoint;
+      RButton: boolean); override;
+  end;
+
+  TTools = array of TTool;
+
+var
+  PBoxHeight, PBoxWidth: Integer;
+  Tools: TTools;
+
+implementation
+
+//ZoomTool procedures
+procedure TZoomTool.MouseDown(Button: TMouseButton; Shift: TShiftState;
+  Point: TPoint);
+begin
+  FFigure := TRectangle.Create(ScreenToWorld(Point));
+  FFigure.SetColor(CellColor);
+  FFigure.SetWidth(AWidth);
+  FFigManager.AddFigure(FFigure);
+end;
+
+procedure TZoomTool.MouseMove(Shift: TShiftState; Point: TPoint);
+begin
+  if (ssLeft in Shift) then
+    FFigure.Update(ScreenToWorld(Point));
+end;
+
+procedure TZoomTool.MouseUp(Shift: TShiftState; Point: TPoint; RButton: boolean);
+begin
+  with Figures[high(Figures)] do
+    begin
+      if (Points[0].x <> Points[1].x) and
+        (Points[0].y <> Points[1].y)
+      then
+        RectangleZoom(PBoxHeight, PBoxWidth, Points[0], Points[1])
+      else
+        PointZoom(DoublePoint(Point.x, Point.y),RButton, PBoxHeight, PBoxWidth);
+    end;
+  FFigManager.DeleteFigure();
+end;
+
+//PolylineTool procedures
+procedure TPolyLineTool.MouseDown(Button: TMouseButton; Shift: TShiftState;
+  Point: TPoint);
+begin
+  if Button = mbLeft then
+  begin
+    if DrawFlag = False then
+    begin
+      FFigure := TPolyLine.Create(ScreenToWorld(Point));
+      FFigManager.AddFigure(FFigure);
+      FFigure.AddPoint(ScreenToWorld(Point));
+      DrawFlag := True;
+      FFigure.SetColor(CellColor);
+      FFigure.SetWidth(AWidth);
+    end
+    else
+      FFigure.AddPoint(ScreenToWorld(Point));
+  end;
+  if Button = mbRight then
+    DrawFlag := False;
+end;
+
+procedure TPolyLineTool.MouseMove(Shift: TShiftState; Point: TPoint);
+begin
+  if DrawFlag = True then
+    FFigure.Update(ScreenToWorld(Point));
+end;
+
+//RectangleTool procedures
+procedure TRectTool.MouseDown(Button: TMouseButton; Shift: TShiftState;
+  Point: TPoint);
+begin
+  FFigure := TRectangle.Create(ScreenToWorld(Point));
+  FFigure.SetColor(CellColor);
+  FFigure.SetWidth(AWidth);
+  FFigManager.AddFigure(FFigure);
+end;
+
+procedure TRectTool.MouseMove(Shift: TShiftState; Point: TPoint);
+begin
+  if (ssLeft in Shift) then
+    FFigure.Update(ScreenToWorld(Point));
+end;
+
+
+//EllipseTool procedures
+procedure TEllipseTool.MouseDown(Button: TMouseButton; Shift: TShiftState;
+  Point: TPoint);
+begin
+  FFigure := TEllipse.Create(ScreenToWorld(Point));
+  FFigure.SetColor(CellColor);
+  FFigure.SetWidth(AWidth);
+  FFigManager.AddFigure(FFigure);
+end;
+
+procedure TEllipseTool.MouseMove(Shift: TShiftState; Point: TPoint);
+begin
+  if (ssLeft in Shift) then
+  FFigure.Update(ScreenToWorld(Point));
+end;
+
+//LineTool procedures
+procedure TLineTool.MouseDown(Button: TMouseButton; Shift: TShiftState;
+  Point: TPoint);
+begin
+  isDrawing := True;
+  FFigure := TLine.Create(ScreenToWorld(Point));
+  FFigure.SetColor(CellColor);
+  FFigure.SetWidth(AWidth);
+  FFigManager.AddFigure(FFigure);
+end;
+
+procedure TLineTool.MouseMove(Shift: TShiftState; Point: TPoint);
+begin
+  if (isDrawing = True) then
+    FFigure.Update(ScreenToWorld(Point));
+end;
+
+procedure TLineTool.MouseUp(Shift: TShiftState; Point: TPoint; RButton);
+begin
+  isDrawing := False;
+end;
+
+//PolygonTool procedures
+procedure TPolyGonTool.MouseMove(Shift: TShiftState; Point: TPoint);
+begin
+  if DrawFlag = True then
+    FFigure.Update(ScreenToWorld(Point));
+end;
+
+procedure TPolyGonTool.MouseDown(Button: TMouseButton; Shift: TShiftState;
+  Point: TPoint);
+begin
+  if Button = mbLeft then
+  begin
+    if DrawFlag = False then
+    begin
+      FFigure := TPolyGon.Create(ScreenToWorld(Point));
+      FFigManager.AddFigure(FFigure);
+      FFigure.AddPoint(ScreenToWorld(Point));
+      DrawFlag:= true;
+      FFigure.SetColor(CellColor);
+      FFigure.SetWidth(AWidth);
+    end
+    else
+      FFigure.AddPoint(ScreenToWorld(Point));
+  end;
+  if Button = mbRight then
+    DrawFlag := False;
+end;
+
+//TTool procedures
+procedure TTool.MouseUp(Shift: TShiftState; Point: TPoint; RButton: boolean);
+begin
+end;
+
+procedure TTool.SetColor(Colors: TCellColor);
+begin
+  CellColor := Colors;
+end;
+
+procedure TTool.SetWidth(CurWidth: integer);
+begin
+  AWidth := CurWidth;
+end;
+
+initialization
+  setlength(Tools, 6);
+  Tools[0] := TPolyLineTool.Create;
+  Tools[1] := TRectTool.Create;
+  Tools[2] := TEllipseTool.Create;
+  Tools[3] := TPolyGonTool.Create;
+  Tools[4] := TLineTool.Create;
+  Tools[5] := TZoomTool.Create;
+end.
+end.
+
+
+

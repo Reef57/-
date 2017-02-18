@@ -1,0 +1,200 @@
+unit FiguresUnit;
+
+{$mode objfpc}{$H+}
+
+interface
+
+uses
+  Classes, SysUtils, Graphics, ScaleUnit;
+
+type
+
+  TCellColor = record
+    Pen, Fill: TColor;
+  end;
+
+  TFigure = class
+  public
+    procedure Draw(Canvas: TCanvas); virtual; abstract;
+    procedure Update(Point: TDoublePoint); virtual;
+    procedure AddPoint(Point: TDoublePoint); virtual; abstract;
+    procedure SetColor(Colors: TCellColor);
+    procedure SetWidth(CurWidth: integer);
+    constructor Create(Point: TDoublePoint);
+  public //fix "property not available" problem with strict protected Points
+    CellColor: TCellColor;
+    SaveWidth: integer;
+    Points: array of TDoublePoint;
+  end;
+
+  TPolyLine = class(TFigure)
+  public
+    procedure Draw(Canvas: TCanvas); override;
+    procedure AddPoint(Point: TDoublePoint); override;
+    procedure Update(Point: TDoublePoint); override;
+    constructor Create(Point: TDoublePoint);
+  end;
+
+  TRectangle = class(TFigure)
+    procedure Draw(Canvas: TCanvas); override;
+  end;
+
+  TEllipse = class(TFigure)
+    procedure Draw(Canvas: TCanvas); override;
+  end;
+
+  TLine = class(TFigure)
+    procedure Draw(Canvas: TCanvas); override;
+  end;
+
+  TPolyGon = class(TFigure)
+    procedure Draw(Canvas: TCanvas); override;
+    procedure AddPoint(Point: TDoublePoint); override;
+    procedure Update(Point: TDoublePoint); override;
+    constructor Create(Point: TDoublePoint);
+  end;
+
+  TFigManager = class
+  public
+    procedure Draw(Canvas: TCanvas);
+    procedure AddFigure(Figure: TFigure);
+    procedure DeleteFigure();
+  end;
+
+var
+  Figures: array of TFigure;
+
+implementation
+
+//Constructors
+constructor TFigure.Create(Point: TDoublePoint);
+begin
+  setlength(Points, length(Points) + 2);
+  Points[0] := Point;
+  Points[1] := Point;
+end;
+
+//Common update
+procedure TFigure.Update(Point: TDoublePoint);
+begin
+  Points[high(Points)] := Point;
+end;
+
+//Polyline
+constructor TPolyline.Create(Point: TDoublePoint);
+begin
+  setlength(Points, 1);
+  Points[High(Points)] := Point;
+end;
+
+procedure TPolyLine.Draw(Canvas: TCanvas);
+var
+  i: integer;
+begin
+Canvas.Pen.Color := CellColor.Pen;
+  Canvas.Brush.Color := CellColor.Fill;
+  Canvas.Pen.Width := SaveWidth;
+  Canvas.MoveTo(WorldToScreen(Points[0]));
+  for i := 1 to High(Points) do
+    Canvas.LineTo(WorldToScreen(Points[i]));
+end;
+
+procedure TPolyLine.Update(Point: TDoublePoint);
+begin
+  Points[High(Points)] := Point;
+end;
+
+procedure TPolyline.AddPoint(Point: TDoublePoint);
+begin
+  setlength(Points, length(Points) + 1);
+  Points[High(Points)] := Point;
+end;
+
+//Rectangle
+procedure TRectangle.Draw(Canvas: TCanvas);
+begin
+  Canvas.Pen.Color := CellColor.Pen;
+  Canvas.Brush.Color := CellColor.Fill;
+  Canvas.Pen.Width := SaveWidth;
+  Canvas.Rectangle(WorldToScreen(DoubleRect(Points[0], Points[1])));
+end;
+
+//Ellipse
+procedure TEllipse.Draw(Canvas: TCanvas);
+begin
+  Canvas.Pen.Color := CellColor.Pen;
+  Canvas.Brush.Color := CellColor.Fill;
+  Canvas.Pen.Width := SaveWidth;
+  Canvas.Ellipse(WorldToScreen(DoubleRect(Points[0], Points[1])));
+end;
+
+//Line
+procedure TLine.Draw(Canvas: TCanvas);
+begin
+  Canvas.Pen.Color := CellColor.Pen;
+  Canvas.Brush.Color := CellColor.Fill;
+  Canvas.Pen.Width := SaveWidth;
+  Canvas.Line(WorldToScreen(DoubleRect(Points[0], Points[1])));
+end;
+
+//Polygon
+constructor TPolyGon.Create(Point: TDoublePoint);
+begin
+  setlength(Points, 1);
+  Points[High(Points)] := Point;
+end;
+
+procedure TPolyGon.Draw(Canvas: TCanvas);
+var
+  i: integer;
+begin
+  Canvas.Pen.Color := CellColor.Pen;
+  Canvas.Brush.Color := CellColor.Fill;
+  Canvas.Pen.Width := SaveWidth;
+  //Canvas.PolyGon(Points);
+end;
+
+procedure TPolyGon.Update(Point: TDoublePoint);
+begin
+  Points[High(Points)] := Point;
+end;
+
+procedure TPolyGon.AddPoint(Point: TDoublePoint);
+begin
+  setlength(Points, length(Points) + 1);
+  Points[High(Points)] := Point;
+end;
+
+//Figure Manager
+procedure TFigManager.Draw(Canvas: TCanvas);
+var
+  Figure: TFigure;
+begin
+  for Figure in Figures do
+    Figure.Draw(Canvas);
+end;
+
+procedure TFigManager.AddFigure(Figure: TFigure);
+begin
+  setlength(Figures, Length(Figures) + 1);
+  Figures[High(Figures)] := Figure;
+end;
+
+procedure TFigManager.DeleteFigure();
+begin
+  setlength(Figures, Length(Figures) - 1);
+end;
+
+//Procedures for changing figure properties
+procedure TFigure.SetColor(Colors: TCellColor);
+begin
+  CellColor := Colors;
+end;
+
+procedure TFigure.SetWidth(CurWidth: integer);
+begin
+  SaveWidth := CurWidth;
+end;
+
+end.
+
