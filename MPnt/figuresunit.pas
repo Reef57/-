@@ -47,7 +47,7 @@ type
     procedure Draw(Canvas: TCanvas); override;
   end;
 
-  TPolyGon = class(TFigure)
+  TRegPolyGon = class(TFigure)
     procedure Draw(Canvas: TCanvas); override;
     procedure AddPoint(Point: TDoublePoint); override;
     procedure Update(Point: TDoublePoint); override;
@@ -137,29 +137,30 @@ begin
   Canvas.Line(WorldToScreen(DoubleRect(Points[0], Points[1])));
 end;
 
-//Polygon
-constructor TPolyGon.Create(Point: TDoublePoint);
+//Regular Polygon
+constructor TRegPolyGon.Create(Point: TDoublePoint);
 begin
-  setlength(Points, 1);
-  Points[High(Points)] := Point;
+  setlength(Points, 2);
+  Points[low(Points)] := Point;
+  Points[high(Points)] := Point;
 end;
 
-procedure TPolyGon.Draw(Canvas: TCanvas);
+procedure TRegPolyGon.Draw(Canvas: TCanvas);
 var
   i: integer;
 begin
   Canvas.Pen.Color := CellColor.Pen;
   Canvas.Brush.Color := CellColor.Fill;
   Canvas.Pen.Width := SaveWidth;
-  //Canvas.PolyGon(Points);
+  //Canvas.PolyGon(WorldToScreen(DoubleRect(Points[0], Points[1])));
 end;
 
-procedure TPolyGon.Update(Point: TDoublePoint);
+procedure TRegPolyGon.Update(Point: TDoublePoint);
 begin
   Points[High(Points)] := Point;
 end;
 
-procedure TPolyGon.AddPoint(Point: TDoublePoint);
+procedure TRegPolyGon.AddPoint(Point: TDoublePoint);
 begin
   setlength(Points, length(Points) + 1);
   Points[High(Points)] := Point;

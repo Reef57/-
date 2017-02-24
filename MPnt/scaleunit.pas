@@ -66,7 +66,7 @@ end;
 
 function WorldToScreen(P: TDoublePoint): TPoint;
 begin
-  Result.X := round(P.X * Zoom / 100) - Offset.Y;
+  Result.X := round(P.X * Zoom / 100) - Offset.X;
   Result.Y := round(P.Y * Zoom / 100) - Offset.Y;
 end;
 

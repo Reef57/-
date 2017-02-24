@@ -207,20 +207,12 @@ procedure TPolyGonTool.MouseDown(Button: TMouseButton; Shift: TShiftState;
 begin
   if Button = mbLeft then
   begin
-    if DrawFlag = False then
-    begin
-      FFigure := TPolyGon.Create(ScreenToWorld(Point));
-      FFigManager.AddFigure(FFigure);
-      FFigure.AddPoint(ScreenToWorld(Point));
-      DrawFlag:= true;
-      FFigure.SetColor(CellColor);
-      FFigure.SetWidth(AWidth);
-    end
-    else
-      FFigure.AddPoint(ScreenToWorld(Point));
+    FFigure := TRegPolyGon.Create(ScreenToWorld(Point));
+    FFigure.SetColor(CellColor);
+    FFigure.SetWidth(AWidth);
+    FFigManager.AddFigure(FFigure);
+    //FFigure.AddPoint(ScreenToWorld(Point));
   end;
-  if Button = mbRight then
-    DrawFlag := False;
 end;
 
 //TTool procedures

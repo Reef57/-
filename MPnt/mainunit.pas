@@ -14,6 +14,7 @@ type
   { TPaint }
 
   TPaint = class(TForm)
+    SaveButton: TButton;
     clWhite: TPanel;
     clBlue: TPanel;
     clAqua: TPanel;
@@ -21,6 +22,7 @@ type
     clRed: TPanel;
     FillColor: TPanel;
     clBlack: TPanel;
+    SavePic: TSaveDialog;
     ZoomBtn: TBitBtn;
     PenColor: TPanel;
     Line: TBitBtn;
@@ -33,7 +35,7 @@ type
     WidthEdit: TSpinEdit;
     ToolPanel: TPanel;
     ColorPanel: TPanel;
-    procedure clBlackMouseDown(Sender: TObject; Button: TMouseButton;
+    procedure clColorMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure FormCreate(Sender: TObject);
     procedure PaintBoxMouseDown(Sender: TObject; Button: TMouseButton;
@@ -43,6 +45,7 @@ type
       Shift: TShiftState; X, Y: integer);
     procedure PaintBoxPaint(Sender: TObject);
     procedure ChangeTool(Sender: TObject);
+    procedure SaveCanvas(Sender: TObject);
     procedure WidthEditChange(Sender: TObject);
     procedure ZoomEditChange(Sender: TObject);
   private
@@ -73,7 +76,7 @@ begin
     Tool.FigManager := FigManager;
 end;
 
-procedure TPaint.clBlackMouseDown(Sender: TObject; Button: TMouseButton;
+procedure TPaint.clColorMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 var
   Colors: TCellColor;
@@ -140,6 +143,72 @@ var
  CurTool := Tools[(Sender as TBitBtn).Tag];
  CurTool.SetColor(Colors);
  CurTool.SetWidth(WidthEdit.Value);
+end;
+
+procedure TPaint.SaveCanvas(Sender: TObject);
+var
+  SaveDialog: TSaveDialog;
+  Bitmp: TBitmap;
+  Types: string;
+  jpg: TJPEGImage;
+  png: TPortableNetworkGraphic;
+  f: text;
+begin
+  SaveDialog := TSaveDialog.Create(self);
+  SaveDialog.Title := 'Save as';
+  SaveDialog.Initialdir := GetCurrentDir;
+  SaveDialog.Filter := 'JPG|*.jpeg|BMP|*.bmp|PNG|*.png';
+  SaveDialog.DefaultExt := 'jpeg';
+  SaveDialog.FilterIndex := 1;
+  if SaveDialog.Execute then begin
+    Bitmp := TBitmap.Create;
+  end;
+
+  case SaveDialog.FilterIndex of
+  1:
+    begin
+      jpg := TJPEGImage.Create;
+      jpg.Width := PaintBox.ClientWidth;
+      jpg.Height := PaintBox.ClientHeight;
+      jpg.Canvas.CopyRect(Rect(0, 0, PaintBox.ClientWidth, PaintBox.ClientHeight),
+      PaintBox.Canvas, Rect(0, 0, PaintBox.ClientWidth, PaintBox.ClientHeight));
+
+      jpg.Assign(jpg);
+      jpg.CompressionQuality := 100;
+      jpg.SaveToFile(SaveDialog.FileName);
+      FreeAndNil(jpg);
+    end;
+  2:
+    begin
+      Bitmp := TBitmap.Create;
+      Bitmp.Width := PaintBox.ClientWidth;
+      Bitmp.Height := PaintBox.ClientHeight;
+      Bitmp.Canvas.CopyRect(Rect(0, 0, PaintBox.ClientWidth, PaintBox.ClientHeight),
+        PaintBox.Canvas,
+        Rect(0, 0, PaintBox.ClientWidth, PaintBox.ClientHeight));
+
+      Bitmp.Assign(Bitmp);
+      Bitmp.SaveToFile(SaveDialog.FileName);
+      FreeAndNil(Bitmp);
+    end;
+  3:
+    begin
+      png := TPortableNetworkGraphic.Create;
+      png.Width := PaintBox.ClientWidth;
+      png.Height := PaintBox.ClientHeight;
+      png.Canvas.CopyRect(Rect(0, 0, PaintBox.ClientWidth, PaintBox.ClientHeight),
+        PaintBox.Canvas,
+        Rect(0, 0, PaintBox.ClientWidth, PaintBox.ClientHeight));
+
+      png.Assign(png);
+      png.Transparent := True;
+      png.TransparentColor := RGBToColor(255, 255, 255);
+
+      png.SaveToFile(SaveDialog.FileName);
+      FreeAndNil(png);
+    end;
+  end;
+  SaveDialog.free;
 end;
 
 procedure TPaint.WidthEditChange(Sender: TObject);

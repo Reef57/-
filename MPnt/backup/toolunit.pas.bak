@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FiguresUnit, Graphics, Controls, Dialogs, Buttons,
-  GraphMath, Math, Grids, LCLIntf, LCLType, ScaleUnit, Windows,
+  GraphMath, Math, Grids, LCLIntf, LCLType, ScaleUnit,
   FPCanvas, TypInfo, LCL, Forms, Menus, StdCtrls;
 
 type
@@ -207,20 +207,12 @@ procedure TPolyGonTool.MouseDown(Button: TMouseButton; Shift: TShiftState;
 begin
   if Button = mbLeft then
   begin
-    if DrawFlag = False then
-    begin
-      FFigure := TPolyGon.Create(ScreenToWorld(Point));
-      FFigManager.AddFigure(FFigure);
-      FFigure.AddPoint(ScreenToWorld(Point));
-      DrawFlag:= true;
+      FFigure := TRegPolyGon.Create(ScreenToWorld(Point));
       FFigure.SetColor(CellColor);
       FFigure.SetWidth(AWidth);
-    end
-    else
-      FFigure.AddPoint(ScreenToWorld(Point));
+      FFigManager.AddFigure(FFigure);
+      //FFigure.AddPoint(ScreenToWorld(Point));
   end;
-  if Button = mbRight then
-    DrawFlag := False;
 end;
 
 //TTool procedures
