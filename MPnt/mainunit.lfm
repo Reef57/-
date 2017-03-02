@@ -1,7 +1,7 @@
 object Paint: TPaint
-  Left = 494
+  Left = 461
   Height = 613
-  Top = 242
+  Top = 297
   Width = 876
   Caption = 'Paint'
   ClientHeight = 613
@@ -517,6 +517,26 @@ object Paint: TPaint
       OnClick = SaveCanvas
       TabOrder = 10
     end
+    object UndoButton: TButton
+      Left = 12
+      Height = 35
+      Top = 376
+      Width = 29
+      Caption = '<-'
+      Enabled = False
+      OnClick = UndoButtonClick
+      TabOrder = 11
+    end
+    object RedoButton: TButton
+      Left = 12
+      Height = 33
+      Top = 416
+      Width = 29
+      Caption = '->'
+      Enabled = False
+      OnClick = RedoButtonClick
+      TabOrder = 12
+    end
   end
   object ColorPanel: TPanel
     Left = 826
@@ -602,7 +622,7 @@ object Paint: TPaint
     OnPaint = PaintBoxPaint
   end
   object SavePic: TSaveDialog
-    left = 8
-    top = 448
+    left = 16
+    top = 528
   end
 end

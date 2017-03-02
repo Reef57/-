@@ -21,6 +21,7 @@ type
     procedure SetColor(Colors: TCellColor);
     procedure SetWidth(CurWidth: integer);
     constructor Create(Point: TDoublePoint);
+    function Copy:TFigure;
   public //fix "property not available" problem with strict protected Points
     CellColor: TCellColor;
     SaveWidth: integer;
@@ -61,8 +62,13 @@ type
     procedure DeleteFigure();
   end;
 
+  procedure SaveInHistory;
+  procedure LoadFromHistory;
+
 var
   Figures: array of TFigure;
+  History:array[0..99] of array of TFigure;
+  LastSaveInHistory, HistoryPointer:integer;
 
 implementation
 
@@ -195,6 +201,51 @@ end;
 procedure TFigure.SetWidth(CurWidth: integer);
 begin
   SaveWidth := CurWidth;
+end;
+
+function TFigure.Copy: TFigure;
+var
+  i: integer;
+begin
+  case Self.ClassName of
+    'TPolyLine': Result := TPolyline.Create(DoublePoint(0,0));
+    'TLine': Result := TLine.Create(DoublePoint(0,0));
+    'TRectangle': Result := TRectangle.Create(DoublePoint(0,0));
+    'TEllipse': Result := TEllipse.Create(DoublePoint(0,0));
+    'TRegPolyGon': Result := TRegPolyGon.Create(DoublePoint(0,0));
+  end;
+  Result.CellColor.Pen := Self.CellColor.Pen;
+  Result.CellColor.Fill := Self.CellColor.Fill;
+  Result.SaveWidth := Self.SaveWidth;
+  SetLength(Result.Points, Length(Self.Points));
+  for i:=0 to High(Points) do
+   Result.Points[i] := Self.Points[i];
+end;
+
+procedure SaveInHistory;
+var
+  i, j: Integer;
+begin
+  if HistoryPointer = 99 then
+    for i:=0 to 98 do
+      History[i] := History[i+1]
+    else
+      HistoryPointer := HistoryPointer + 1;
+   LastSaveInHistory := HistoryPointer;
+   SetLength(History[HistoryPointer], Length(Figures));
+   for i:=0 to High(Figures) do
+   begin
+   History[HistoryPointer][i] := Figures[i].Copy;
+   end;
+end;
+
+procedure LoadFromHistory;
+var
+  i: integer;
+begin
+SetLength(Figures, Length(History[HistoryPointer]));
+for i:=0 to High(Figures) do
+  Figures[i] := History[HistoryPointer][i].Copy;
 end;
 
 end.

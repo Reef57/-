@@ -182,6 +182,7 @@ begin
   FFigure.SetColor(CellColor);
   FFigure.SetWidth(AWidth);
   FFigManager.AddFigure(FFigure);
+  SaveInHistory;
 end;
 
 procedure TLineTool.MouseMove(Shift: TShiftState; Point: TPoint);
@@ -207,11 +208,11 @@ procedure TPolyGonTool.MouseDown(Button: TMouseButton; Shift: TShiftState;
 begin
   if Button = mbLeft then
   begin
-      FFigure := TRegPolyGon.Create(ScreenToWorld(Point));
-      FFigure.SetColor(CellColor);
-      FFigure.SetWidth(AWidth);
-      FFigManager.AddFigure(FFigure);
-      //FFigure.AddPoint(ScreenToWorld(Point));
+    FFigure := TRegPolyGon.Create(ScreenToWorld(Point));
+    FFigure.SetColor(CellColor);
+    FFigure.SetWidth(AWidth);
+    FFigManager.AddFigure(FFigure);
+    //FFigure.AddPoint(ScreenToWorld(Point));
   end;
 end;
 

@@ -14,6 +14,8 @@ type
   { TPaint }
 
   TPaint = class(TForm)
+    UndoButton: TButton;
+    RedoButton: TButton;
     SaveButton: TButton;
     clWhite: TPanel;
     clBlue: TPanel;
@@ -45,7 +47,9 @@ type
       Shift: TShiftState; X, Y: integer);
     procedure PaintBoxPaint(Sender: TObject);
     procedure ChangeTool(Sender: TObject);
+    procedure RedoButtonClick(Sender: TObject);
     procedure SaveCanvas(Sender: TObject);
+    procedure UndoButtonClick(Sender: TObject);
     procedure WidthEditChange(Sender: TObject);
     procedure ZoomEditChange(Sender: TObject);
   private
@@ -127,11 +131,16 @@ begin
   CurPoint.Y := Y;
   CurTool.MouseUp(Shift, CurPoint, RButton);
   ZoomEdit.Text := IntToStr(round(Zoom));
+  SaveInHistory;
 end;
 
 procedure TPaint.PaintBoxPaint(Sender: TObject);
 begin
   FigManager.Draw(PaintBox.Canvas);
+  if HistoryPointer <> 0 then
+     UndoButton.Enabled := True;
+  if(HistoryPointer <> 99) and (HistoryPointer < LastSaveInHistory) then
+     RedoButton.Enabled := True;
 end;
 
 procedure TPaint.ChangeTool(Sender: TObject);
@@ -143,6 +152,18 @@ var
  CurTool := Tools[(Sender as TBitBtn).Tag];
  CurTool.SetColor(Colors);
  CurTool.SetWidth(WidthEdit.Value);
+end;
+
+procedure TPaint.RedoButtonClick(Sender: TObject);
+begin
+  if (HistoryPointer <> 99) and (HistoryPointer < LastSaveInHistory) then
+  begin
+    HistoryPointer := HistoryPointer + 1;
+    LoadFromHistory;
+    if (HistoryPointer = 99) or (HistoryPointer = LastSaveInHistory) then
+      RedoButton.Enabled := False;
+    Invalidate;
+  end;
 end;
 
 procedure TPaint.SaveCanvas(Sender: TObject);
@@ -209,6 +230,16 @@ begin
     end;
   end;
   SaveDialog.free;
+end;
+
+procedure TPaint.UndoButtonClick(Sender: TObject);
+begin
+  if HistoryPointer <> 0 then
+    HistoryPointer := HistoryPointer - 1;
+  LoadFromHistory;
+  if HistoryPointer = 0 then
+    UndoButton.Enabled := False;
+  Invalidate;
 end;
 
 procedure TPaint.WidthEditChange(Sender: TObject);

@@ -1,7 +1,7 @@
 object Paint: TPaint
-  Left = 863
+  Left = 494
   Height = 613
-  Top = 307
+  Top = 242
   Width = 876
   Caption = 'Paint'
   ClientHeight = 613
@@ -322,6 +322,7 @@ object Paint: TPaint
     object WidthEdit: TSpinEdit
       Left = 6
       Height = 23
+      Hint = 'Line width'
       Top = 296
       Width = 35
       MinValue = 1
@@ -489,7 +490,7 @@ object Paint: TPaint
     object ZoomEdit: TSpinEdit
       Left = 0
       Height = 23
-      Top = 590
+      Top = 583
       Width = 47
       MaxValue = 1000
       MinValue = 100
@@ -506,6 +507,15 @@ object Paint: TPaint
       Caption = 'Z'
       OnClick = ChangeTool
       TabOrder = 9
+    end
+    object SaveButton: TButton
+      Left = 0
+      Height = 32
+      Top = 552
+      Width = 47
+      Caption = 'Save As'
+      OnClick = SaveCanvas
+      TabOrder = 10
     end
   end
   object ColorPanel: TPanel
@@ -527,7 +537,7 @@ object Paint: TPaint
       Color = clBackground
       ParentColor = False
       TabOrder = 0
-      OnMouseDown = clBlackMouseDown
+      OnMouseDown = clColorMouseDown
     end
     object clWhite: TPanel
       Left = 25
@@ -537,7 +547,7 @@ object Paint: TPaint
       Color = clWhite
       ParentColor = False
       TabOrder = 1
-      OnMouseDown = clBlackMouseDown
+      OnMouseDown = clColorMouseDown
     end
     object clBlue: TPanel
       Left = 0
@@ -547,7 +557,7 @@ object Paint: TPaint
       Color = clBlue
       ParentColor = False
       TabOrder = 2
-      OnMouseDown = clBlackMouseDown
+      OnMouseDown = clColorMouseDown
     end
     object clAqua: TPanel
       Left = 24
@@ -557,7 +567,7 @@ object Paint: TPaint
       Color = clAqua
       ParentColor = False
       TabOrder = 3
-      OnMouseDown = clBlackMouseDown
+      OnMouseDown = clColorMouseDown
     end
     object clGreen: TPanel
       Left = 0
@@ -567,7 +577,7 @@ object Paint: TPaint
       Color = clLime
       ParentColor = False
       TabOrder = 4
-      OnMouseDown = clBlackMouseDown
+      OnMouseDown = clColorMouseDown
     end
     object clRed: TPanel
       Left = 24
@@ -577,7 +587,27 @@ object Paint: TPaint
       Color = clRed
       ParentColor = False
       TabOrder = 5
-      OnMouseDown = clBlackMouseDown
+      OnMouseDown = clColorMouseDown
+    end
+    object UndoButton: TButton
+      Left = 13
+      Height = 35
+      Top = 118
+      Width = 29
+      Caption = '<-'
+      Enabled = False
+      OnClick = UndoButtonClick
+      TabOrder = 6
+    end
+    object RedoButton: TButton
+      Left = 13
+      Height = 33
+      Top = 178
+      Width = 29
+      Caption = '->'
+      Enabled = False
+      OnClick = RedoButtonClick
+      TabOrder = 7
     end
   end
   object PaintBox: TPaintBox
@@ -590,5 +620,9 @@ object Paint: TPaint
     OnMouseMove = PaintBoxMouseMove
     OnMouseUp = PaintBoxMouseUp
     OnPaint = PaintBoxPaint
+  end
+  object SavePic: TSaveDialog
+    left = 8
+    top = 448
   end
 end
