@@ -1,7 +1,7 @@
 object Paint: TPaint
-  Left = 350
+  Left = 307
   Height = 664
-  Top = 315
+  Top = 254
   Width = 918
   Caption = 'Paint'
   ClientHeight = 664
@@ -492,6 +492,7 @@ object Paint: TPaint
       Height = 30
       Top = 632
       Width = 47
+      Increment = 10
       MaxValue = 1000
       MinValue = 100
       OnChange = ZoomEditChange
@@ -612,10 +613,12 @@ object Paint: TPaint
   end
   object PaintBox: TPaintBox
     Left = 51
-    Height = 664
+    Height = 639
     Top = 0
-    Width = 817
+    Width = 792
     Align = alClient
+    BorderSpacing.Right = 25
+    BorderSpacing.Bottom = 25
     OnMouseDown = PaintBoxMouseDown
     OnMouseMove = PaintBoxMouseMove
     OnMouseUp = PaintBoxMouseUp
@@ -629,6 +632,25 @@ object Paint: TPaint
     Caption = 'SVG'
     OnClick = SaveAsSvg
     TabOrder = 2
+  end
+  object VertScroll: TScrollBar
+    Left = 844
+    Height = 639
+    Top = 0
+    Width = 12
+    Kind = sbVertical
+    PageSize = 639
+    TabOrder = 3
+    OnChange = ScrollBarChange
+  end
+  object HorzScroll: TScrollBar
+    Left = 51
+    Height = 12
+    Top = 639
+    Width = 792
+    PageSize = 792
+    TabOrder = 4
+    OnChange = ScrollBarChange
   end
   object SavePic: TSaveDialog
     left = 16

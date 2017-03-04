@@ -1,0 +1,30 @@
+unit main;
+
+{$mode objfpc}{$H+}
+
+interface
+
+var
+SaveNum, SaveOp: string;
+is_error, is_op: boolean;
+
+procedure Number(var my_output, Num: string);
+uses
+  Classes, SysUtils;
+
+implementation
+
+procedure Number(var my_output, CurOp: string);
+begin
+  if (is_error = False) then
+  begin
+    if (my_output = '0') or (is_op = True) then
+    begin
+      my_output := '';
+    end;
+    my_output := my_output + Num;
+    is_op := False;
+  end;
+end;
+end.
+

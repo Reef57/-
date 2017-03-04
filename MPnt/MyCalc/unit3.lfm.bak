@@ -1,0 +1,277 @@
+object MyCalc: TMyCalc
+  Left = 657
+  Height = 279
+  Top = 483
+  Width = 209
+  Caption = 'MyCalc'
+  ClientHeight = 279
+  ClientWidth = 209
+  LCLVersion = '1.6.0.4'
+  object Zero: TButton
+    Left = 9
+    Height = 30
+    Top = 240
+    Width = 72
+    Caption = '0'
+    OnClick = Button_Click
+    TabOrder = 0
+  end
+  object One: TButton
+    Left = 8
+    Height = 30
+    Top = 208
+    Width = 32
+    Caption = '1'
+    OnClick = Button_Click
+    TabOrder = 1
+  end
+  object Two: TButton
+    Left = 48
+    Height = 30
+    Top = 208
+    Width = 32
+    Caption = '2'
+    OnClick = Button_Click
+    TabOrder = 2
+  end
+  object Five: TButton
+    Left = 48
+    Height = 30
+    Top = 176
+    Width = 32
+    Caption = '5'
+    OnClick = Button_Click
+    TabOrder = 3
+  end
+  object Four: TButton
+    Left = 8
+    Height = 30
+    Top = 176
+    Width = 32
+    Caption = '4'
+    OnClick = Button_Click
+    TabOrder = 4
+  end
+  object Seven: TButton
+    Left = 9
+    Height = 30
+    Top = 144
+    Width = 32
+    Caption = '7'
+    OnClick = Button_Click
+    TabOrder = 5
+  end
+  object Eight: TButton
+    Left = 49
+    Height = 30
+    Top = 144
+    Width = 32
+    Caption = '8'
+    OnClick = Button_Click
+    TabOrder = 6
+  end
+  object Three: TButton
+    Left = 88
+    Height = 30
+    Top = 208
+    Width = 32
+    Caption = '3'
+    OnClick = Button_Click
+    TabOrder = 7
+  end
+  object Six: TButton
+    Left = 88
+    Height = 30
+    Top = 176
+    Width = 32
+    Caption = '6'
+    OnClick = Button_Click
+    TabOrder = 8
+  end
+  object Nine: TButton
+    Left = 88
+    Height = 30
+    Top = 144
+    Width = 32
+    Caption = '9'
+    OnClick = Button_Click
+    TabOrder = 9
+  end
+  object C: TButton
+    Left = 88
+    Height = 30
+    Top = 112
+    Width = 32
+    Caption = 'C'
+    OnClick = Button_Click
+    TabOrder = 10
+  end
+  object CE: TButton
+    Left = 48
+    Height = 30
+    Top = 112
+    Width = 32
+    Caption = 'CE'
+    OnClick = Button_Click
+    TabOrder = 11
+  end
+  object Backspace: TButton
+    Left = 8
+    Height = 30
+    Top = 112
+    Width = 32
+    Caption = '<--'
+    OnClick = Button_Click
+    TabOrder = 12
+  end
+  object MC: TButton
+    Left = 8
+    Height = 30
+    Top = 80
+    Width = 32
+    Caption = 'MC'
+    OnClick = Button_Click
+    TabOrder = 13
+  end
+  object MR: TButton
+    Left = 48
+    Height = 30
+    Top = 80
+    Width = 32
+    Caption = 'MR'
+    OnClick = Button_Click
+    TabOrder = 14
+  end
+  object MS: TButton
+    Left = 88
+    Height = 30
+    Top = 80
+    Width = 32
+    Caption = 'MS'
+    OnClick = Button_Click
+    TabOrder = 15
+  end
+  object M_plus: TButton
+    Left = 128
+    Height = 30
+    Top = 80
+    Width = 32
+    Caption = 'M+'
+    OnClick = Button_Click
+    TabOrder = 16
+  end
+  object Plus_minus: TButton
+    Left = 128
+    Height = 30
+    Top = 112
+    Width = 32
+    Caption = '±'
+    OnClick = Button_Click
+    TabOrder = 17
+  end
+  object Divide: TButton
+    Left = 128
+    Height = 30
+    Top = 144
+    Width = 32
+    Caption = '/'
+    OnClick = Button_Click
+    TabOrder = 18
+  end
+  object Multiply: TButton
+    Left = 128
+    Height = 30
+    Top = 176
+    Width = 32
+    Caption = '*'
+    OnClick = Button_Click
+    TabOrder = 19
+  end
+  object Minus: TButton
+    Left = 128
+    Height = 30
+    Top = 208
+    Width = 32
+    Caption = '-'
+    OnClick = Button_Click
+    TabOrder = 20
+  end
+  object Dot: TButton
+    Left = 88
+    Height = 30
+    Top = 240
+    Width = 32
+    Caption = '.'
+    OnClick = Button_Click
+    TabOrder = 21
+  end
+  object Plus: TButton
+    Left = 128
+    Height = 30
+    Top = 240
+    Width = 32
+    Caption = '+'
+    OnClick = Button_Click
+    TabOrder = 22
+  end
+  object M_minus: TButton
+    Left = 168
+    Height = 30
+    Top = 80
+    Width = 32
+    Caption = 'M-'
+    OnClick = Button_Click
+    TabOrder = 23
+  end
+  object Square_root: TButton
+    Left = 168
+    Height = 30
+    Top = 112
+    Width = 32
+    Caption = '√'
+    OnClick = Button_Click
+    TabOrder = 24
+  end
+  object Mod_div: TButton
+    Left = 168
+    Height = 30
+    Top = 144
+    Width = 32
+    Caption = '%'
+    OnClick = Button_Click
+    TabOrder = 25
+  end
+  object Onediv: TButton
+    Left = 168
+    Height = 30
+    Top = 176
+    Width = 32
+    Caption = '1/x'
+    OnClick = Button_Click
+    TabOrder = 26
+  end
+  object Equals: TButton
+    Left = 168
+    Height = 62
+    Top = 208
+    Width = 32
+    Caption = '='
+    OnClick = Button_Click
+    TabOrder = 27
+  end
+  object MInput: TEdit
+    Left = 8
+    Height = 30
+    Top = 40
+    Width = 192
+    TabOrder = 28
+    Text = '0'
+  end
+  object MOutput: TEdit
+    Left = 8
+    Height = 30
+    Top = 8
+    Width = 192
+    TabOrder = 29
+  end
+end

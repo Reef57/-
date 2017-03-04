@@ -1,21 +1,21 @@
 object Paint: TPaint
-  Left = 494
-  Height = 613
-  Top = 242
-  Width = 876
+  Left = 416
+  Height = 664
+  Top = 106
+  Width = 918
   Caption = 'Paint'
-  ClientHeight = 613
-  ClientWidth = 876
+  ClientHeight = 664
+  ClientWidth = 918
   Color = clWindow
   OnCreate = FormCreate
   LCLVersion = '1.6.0.4'
   object ToolPanel: TPanel
     Left = 0
-    Height = 613
+    Height = 664
     Top = 0
     Width = 51
     Align = alLeft
-    ClientHeight = 613
+    ClientHeight = 664
     ClientWidth = 51
     TabOrder = 0
     object Polyline: TBitBtn
@@ -490,8 +490,9 @@ object Paint: TPaint
     object ZoomEdit: TSpinEdit
       Left = 0
       Height = 23
-      Top = 583
+      Top = 632
       Width = 47
+      Increment = 10
       MaxValue = 1000
       MinValue = 100
       OnChange = ZoomEditChange
@@ -511,20 +512,40 @@ object Paint: TPaint
     object SaveButton: TButton
       Left = 0
       Height = 32
-      Top = 552
+      Top = 600
       Width = 47
       Caption = 'Save As'
       OnClick = SaveCanvas
       TabOrder = 10
     end
+    object UndoButton: TButton
+      Left = 12
+      Height = 35
+      Top = 376
+      Width = 29
+      Caption = '<-'
+      Enabled = False
+      OnClick = UndoButtonClick
+      TabOrder = 11
+    end
+    object RedoButton: TButton
+      Left = 12
+      Height = 33
+      Top = 416
+      Width = 29
+      Caption = '->'
+      Enabled = False
+      OnClick = RedoButtonClick
+      TabOrder = 12
+    end
   end
   object ColorPanel: TPanel
-    Left = 826
-    Height = 613
+    Left = 868
+    Height = 664
     Top = 0
     Width = 50
     Align = alRight
-    ClientHeight = 613
+    ClientHeight = 664
     ClientWidth = 50
     Color = cl3DLight
     ParentColor = False
@@ -589,40 +610,50 @@ object Paint: TPaint
       TabOrder = 5
       OnMouseDown = clColorMouseDown
     end
-    object UndoButton: TButton
-      Left = 13
-      Height = 35
-      Top = 118
-      Width = 29
-      Caption = '<-'
-      Enabled = False
-      OnClick = UndoButtonClick
-      TabOrder = 6
-    end
-    object RedoButton: TButton
-      Left = 13
-      Height = 33
-      Top = 178
-      Width = 29
-      Caption = '->'
-      Enabled = False
-      OnClick = RedoButtonClick
-      TabOrder = 7
-    end
   end
   object PaintBox: TPaintBox
     Left = 51
-    Height = 613
+    Height = 639
     Top = 0
-    Width = 775
+    Width = 792
     Align = alClient
+    BorderSpacing.Right = 25
+    BorderSpacing.Bottom = 25
     OnMouseDown = PaintBoxMouseDown
     OnMouseMove = PaintBoxMouseMove
     OnMouseUp = PaintBoxMouseUp
     OnPaint = PaintBoxPaint
   end
+  object SaveSvgButton: TButton
+    Left = 0
+    Height = 32
+    Top = 568
+    Width = 47
+    Caption = 'SVG'
+    OnClick = SaveAsSvg
+    TabOrder = 2
+  end
+  object VertScroll: TScrollBar
+    Left = 844
+    Height = 639
+    Top = 0
+    Width = 19
+    Kind = sbVertical
+    PageSize = 639
+    TabOrder = 3
+    OnChange = ScrollBarChange
+  end
+  object HorzScroll: TScrollBar
+    Left = 51
+    Height = 22
+    Top = 639
+    Width = 792
+    PageSize = 792
+    TabOrder = 4
+    OnChange = ScrollBarChange
+  end
   object SavePic: TSaveDialog
-    left = 8
-    top = 448
+    left = 16
+    top = 504
   end
 end

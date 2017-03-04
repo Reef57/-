@@ -29,12 +29,14 @@ function DoubleRect(A, B: TDoublePoint): TDoubleRect;
 procedure RectangleZoom(Height, Width: Integer; AMin, AMax: TDoublePoint);
 procedure PointZoom(APoint: TDoublePoint;RButton: Boolean;Height, Width: Integer);
 procedure CenterZoom(AWidth, AHeight: integer; AoldZoom: Double);
+procedure FindMinMax(APoint: TPoint);
 
 var
   Zoom: integer = 100;
   Offset: TPoint;
   MinPoint : TPoint;
   MaxPoint: TPoint;
+  InvalidateHandler: procedure of Object;
 
 implementation
 
@@ -107,6 +109,7 @@ begin
       Offset.x := round(AMin.X * Zoom / 100) - 5;
       Offset.y := round(AMin.Y * Zoom / 100) - 5;
     end;
+  InvalidateHandler;
 end;
 
 procedure PointZoom(APoint: TDoublePoint;RButton: Boolean;Height, Width: Integer);
@@ -121,6 +124,20 @@ begin
     Zoom := 1;
   Offset.x := Offset.x + (WorldToScreen(APoint).X - round(APoint.X));
   Offset.y := Offset.y + (WorldToScreen(APoint).y - round(APoint.Y));
+  InvalidateHandler;
+end;
+
+procedure FindMinMax(APoint: TPoint);
+begin
+  if APoint.x > MaxPoint.x then
+    MaxPoint.x := APoint.x;
+  if APoint.y > MaxPoint.y then
+    MaxPoint.y := APoint.y;
+  if APoint.x < MinPoint.x then
+    MinPoint.x := APoint.x;
+  if APoint.y < MinPoint.y then
+    MinPoint.y := APoint.y;
+  InvalidateHandler;
 end;
 
 end.

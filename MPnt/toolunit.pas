@@ -90,6 +90,7 @@ begin
   FFigure.SetColor(CellColor);
   FFigure.SetWidth(AWidth);
   FFigManager.AddFigure(FFigure);
+  FindMinMax(Point);
 end;
 
 procedure TZoomTool.MouseMove(Shift: TShiftState; Point: TPoint);
@@ -132,6 +133,7 @@ begin
   end;
   if Button = mbRight then
     DrawFlag := False;
+  FindMinMax(Point);
 end;
 
 procedure TPolyLineTool.MouseMove(Shift: TShiftState; Point: TPoint);
@@ -148,6 +150,7 @@ begin
   FFigure.SetColor(CellColor);
   FFigure.SetWidth(AWidth);
   FFigManager.AddFigure(FFigure);
+  FindMinMax(Point);
 end;
 
 procedure TRectTool.MouseMove(Shift: TShiftState; Point: TPoint);
@@ -165,6 +168,7 @@ begin
   FFigure.SetColor(CellColor);
   FFigure.SetWidth(AWidth);
   FFigManager.AddFigure(FFigure);
+  FindMinMax(Point);
 end;
 
 procedure TEllipseTool.MouseMove(Shift: TShiftState; Point: TPoint);
@@ -182,6 +186,7 @@ begin
   FFigure.SetColor(CellColor);
   FFigure.SetWidth(AWidth);
   FFigManager.AddFigure(FFigure);
+  FindMinMax(Point);
 end;
 
 procedure TLineTool.MouseMove(Shift: TShiftState; Point: TPoint);
