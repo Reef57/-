@@ -14,6 +14,7 @@ type
   { TPaint }
 
   TPaint = class(TForm)
+    SaveSvgButton: TButton;
     UndoButton: TButton;
     RedoButton: TButton;
     SaveButton: TButton;
@@ -48,6 +49,7 @@ type
     procedure PaintBoxPaint(Sender: TObject);
     procedure ChangeTool(Sender: TObject);
     procedure RedoButtonClick(Sender: TObject);
+    procedure SaveAsSvg(Sender: TObject);
     procedure SaveCanvas(Sender: TObject);
     procedure UndoButtonClick(Sender: TObject);
     procedure WidthEditChange(Sender: TObject);
@@ -57,6 +59,7 @@ type
   public
     { public declarations }
   end;
+  procedure SetSvgParams(Figure: TFigure; Option: integer);
 
 var
   Paint: TPaint;
@@ -64,6 +67,7 @@ var
 implementation
 
 var
+  Parameters: string;
   CurTool: TTool;
   Colors : TCellColor;
   FigManager: TFigManager;
@@ -166,6 +170,71 @@ begin
   end;
 end;
 
+procedure TPaint.SaveAsSvg(Sender: TObject);
+var
+  svg: text;
+  Figure: TFigure;
+  i: integer;
+begin
+  assignfile(svg, 'mypic.svg');
+  rewrite(svg);
+  writeln(svg, '<?xml version="1.0" encoding="UTF-8" standalone="no"?>');
+  writeln(svg, '   <svg version="1.1" width="'+ IntToStr(PaintBox.ClientWidth) + '" height="' + IntToStr(PaintBox.ClientHeight) + '"');
+  writeln(svg, '      viewBox="0 0 1280 1024"');
+  writeln(svg, '   baseProfile="full"');
+  writeln(svg, '   xmlns="http://www.w3.org/2000/svg"');
+  writeln(svg, '   xmlns:xlink="http://www.w3.org/1999/xlink"');
+  writeln(svg, '  xmlns:ev="http://www.w3.org/2001/xml-events">');
+  writeln(svg, '  <title>SVG</title>');
+  writeln(svg, '          <g id = "gr1">');
+
+  for Figure in Figures do begin
+    SetSvgParams(Figure, 0);
+    writeln(svg, Parameters);
+    SetSvgParams(Figure, 1);
+  end;
+
+  writeln(svg, '</g>');
+  writeln(svg, ' </svg>');
+  CloseFile(svg);
+end;
+
+procedure SetSvgParams(Figure: TFigure; Option: integer);
+var
+  temp: TRect;
+  APoints: array of TPoint;
+begin
+  if Option = 0 then
+    case Figure.ClassName of
+    'TEllipse': begin
+      setlength(APoints, 2);
+      temp := WorldToScreen(DoubleRect(Figure.Points[0], Figure.Points[1]));
+      APoints[0] := temp.TopLeft;
+      APoints[1] := temp.BottomRight;
+      Parameters := '<ellipse cx="'+IntToStr(APoints[1].x)+'" cy="'+IntToStr(APoints[1].y)+
+      '" rx="'+IntToStr(APoints[0].x)+'" ry="'+IntToStr(APoints[0].y)+'"';
+    end;
+    'TLine': begin
+      setlength(APoints, 2);
+      temp := WorldToScreen(DoubleRect(Figure.Points[0], Figure.Points[1]));
+      APoints[0] := temp.TopLeft;
+      APoints[1] := temp.BottomRight;
+      Parameters := '<line x1="'+IntToStr(APoints[0].x)+'" y1="'+IntToStr(APoints[0].y)+
+      '" x2="'+IntToStr(APoints[1].x)+'" y2="'+IntToStr(APoints[1].y)+'"';
+    end;
+    'TRectangle': begin
+      setlength(APoints, 2);
+      temp := WorldToScreen(DoubleRect(Figure.Points[0], Figure.Points[1]));
+      APoints[0] := temp.TopLeft;
+      APoints[1] := temp.BottomRight;
+      Parameters := '<rect x="'+IntToStr(APoints[0].x)+'" y="'+IntToStr(APoints[0].y)+'"';
+    end;
+    end;
+  if Option = 1 then begin
+    Parameters := 'style="fill:white; stroke:black;stroke-width:1" />'
+  end;
+end;
+
 procedure TPaint.SaveCanvas(Sender: TObject);
 var
   SaveDialog: TSaveDialog;
@@ -178,7 +247,7 @@ begin
   SaveDialog := TSaveDialog.Create(self);
   SaveDialog.Title := 'Save as';
   SaveDialog.Initialdir := GetCurrentDir;
-  SaveDialog.Filter := 'JPG|*.jpeg|BMP|*.bmp|PNG|*.png';
+  SaveDialog.Filter := 'JPG|*.jpeg|BMP|*.bmp|PNG|*.png|SVG|*.svg';
   SaveDialog.DefaultExt := 'jpeg';
   SaveDialog.FilterIndex := 1;
   if SaveDialog.Execute then begin

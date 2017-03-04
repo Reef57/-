@@ -1,21 +1,21 @@
 object Paint: TPaint
-  Left = 461
-  Height = 613
-  Top = 297
-  Width = 876
+  Left = 350
+  Height = 664
+  Top = 315
+  Width = 918
   Caption = 'Paint'
-  ClientHeight = 613
-  ClientWidth = 876
+  ClientHeight = 664
+  ClientWidth = 918
   Color = clWindow
   OnCreate = FormCreate
   LCLVersion = '1.6.2.0'
   object ToolPanel: TPanel
     Left = 0
-    Height = 613
+    Height = 664
     Top = 0
     Width = 51
     Align = alLeft
-    ClientHeight = 613
+    ClientHeight = 664
     ClientWidth = 51
     TabOrder = 0
     object Polyline: TBitBtn
@@ -490,7 +490,7 @@ object Paint: TPaint
     object ZoomEdit: TSpinEdit
       Left = 0
       Height = 30
-      Top = 583
+      Top = 632
       Width = 47
       MaxValue = 1000
       MinValue = 100
@@ -511,7 +511,7 @@ object Paint: TPaint
     object SaveButton: TButton
       Left = 0
       Height = 32
-      Top = 552
+      Top = 600
       Width = 47
       Caption = 'Save As'
       OnClick = SaveCanvas
@@ -539,12 +539,12 @@ object Paint: TPaint
     end
   end
   object ColorPanel: TPanel
-    Left = 826
-    Height = 613
+    Left = 868
+    Height = 664
     Top = 0
     Width = 50
     Align = alRight
-    ClientHeight = 613
+    ClientHeight = 664
     ClientWidth = 50
     Color = cl3DLight
     ParentColor = False
@@ -612,17 +612,26 @@ object Paint: TPaint
   end
   object PaintBox: TPaintBox
     Left = 51
-    Height = 613
+    Height = 664
     Top = 0
-    Width = 775
+    Width = 817
     Align = alClient
     OnMouseDown = PaintBoxMouseDown
     OnMouseMove = PaintBoxMouseMove
     OnMouseUp = PaintBoxMouseUp
     OnPaint = PaintBoxPaint
   end
+  object SaveSvgButton: TButton
+    Left = 0
+    Height = 32
+    Top = 568
+    Width = 47
+    Caption = 'SVG'
+    OnClick = SaveAsSvg
+    TabOrder = 2
+  end
   object SavePic: TSaveDialog
     left = 16
-    top = 528
+    top = 504
   end
 end
